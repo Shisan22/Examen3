@@ -1,0 +1,1163 @@
+{
+  "info": {
+    "_postman_id": "f7489aa6-34aa-4985-a022-cb258aacaa16",
+    "name": "API Consultas Médicas (DDD In-Memory)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "43705198",
+    "_collection_link": "https://nestor-9731994.postman.co/workspace/ca5ad7a8-5f82-4ca4-8762-61a8b214cd7c/collection/43705198-f7489aa6-34aa-4985-a022-cb258aacaa16?action=share&source=collection_link&creator=43705198"
+  },
+  "item": [
+    {
+      "name": "Pacientes",
+      "item": [
+        {
+          "name": "Crear Paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the new Paciente ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.a('string'); // Assuming the ID is returned directly",
+                  "    pm.expect(jsonData).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i); // Basic GUID check",
+                  "    pm.collectionVariables.set(\"nuevo_paciente_id\", jsonData);",
+                  "    console.log(\"Nuevo Paciente ID guardado: \", jsonData);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos\",\n  \"apellido\": \"Gomez\",\n  \"email\": \"carlos.g@email.com\",\n  \"fechaNacimiento\": \"1990-03-25T00:00:00\",\n  \"telefono\": \"555-1234\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            },
+            "description": "Crea un nuevo paciente en el sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Paciente por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response contains paciente data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('nombre');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes/{{nuevo_paciente_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pacientes",
+                "{{nuevo_paciente_id}}"
+              ]
+            },
+            "description": "Obtiene los detalles de un paciente específico usando el ID guardado en la variable `nuevo_paciente_id`."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Todos los Pacientes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/pacientes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "pacientes"
+              ]
+            },
+            "description": "Obtiene una lista de todos los pacientes registrados."
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints relacionados con la gestión de Pacientes."
+    },
+    {
+      "name": "Medicos",
+      "item": [
+        {
+          "name": "Crear Medico (DERMA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the new Medico ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.a('string');",
+                  "    pm.expect(jsonData).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);",
+                  "    pm.collectionVariables.set(\"medico_derma_id\", jsonData);",
+                  "    console.log(\"Nuevo Medico ID guardado: \", jsonData);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dra. Elena\",\n  \"apellido\": \"Ramirez\",\n  \"especialidadNombre\": \"Dermatología\",\n  \"especialidadCodigo\": \"DERMA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos"
+              ]
+            },
+            "description": "Crea un nuevo médico en el sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Medico (PEDIA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the new Medico ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.a('string');",
+                  "    pm.expect(jsonData).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);",
+                  "    pm.collectionVariables.set(\"medico_pedia_id\", jsonData);",
+                  "    console.log(\"Nuevo Medico ID guardado: \", jsonData);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Dr. Luis\",\n  \"apellido\": \"Alvarez\",\n  \"especialidadNombre\": \"Pediatría\",\n  \"especialidadCodigo\": \"PEDIA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos"
+              ]
+            },
+            "description": "Crea un nuevo médico en el sistema."
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Disponibilidad Medico (DERMA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Disponibilidad agregada exitosamente.\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diaSemana\": 1, \n  \"horaInicio\": \"09:00:00\",\n  \"horaFin\": \"13:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medico_derma_id}}/disponibilidad",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos",
+                "{{medico_derma_id}}",
+                "disponibilidad"
+              ]
+            },
+            "description": "Agrega un bloque de horario disponible para el médico recién creado."
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Disponibilidad Medico (PEDIA)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Disponibilidad agregada exitosamente.\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diaSemana\": 2, \n  \"horaInicio\": \"09:00:00\",\n  \"horaFin\": \"13:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medico_pedia_id}}/disponibilidad",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos",
+                "{{medico_pedia_id}}",
+                "disponibilidad"
+              ]
+            },
+            "description": "Agrega un bloque de horario disponible para el médico recién creado."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Medico por ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response contains medico data\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.have.property('id');",
+                  "    pm.expect(jsonData).to.have.property('nombre');",
+                  "    pm.expect(jsonData).to.have.property('especialidad');",
+                  "    pm.expect(jsonData).to.have.property('disponibilidad');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos/{{medico_derma_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos",
+                "{{medico_derma_id}}"
+              ]
+            },
+            "description": "Obtiene los detalles de un médico específico usando el ID guardado en `nuevo_medico_id`."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Todos los Medicos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response is an array\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/medicos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "medicos"
+              ]
+            },
+            "description": "Obtiene una lista de todos los médicos registrados."
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints relacionados con la gestión de Médicos y su disponibilidad."
+    },
+    {
+      "name": "Consultas",
+      "item": [
+        {
+          "name": "Solicitar Consulta (Éxito)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the new Consulta ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.a('string');",
+                  "    pm.expect(jsonData).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);",
+                  "    pm.collectionVariables.set(\"nueva_consulta_id\", jsonData);",
+                  "    console.log(\"Nueva Consulta ID guardada: \", jsonData);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": \"{{nuevo_paciente_id}}\", \n  \"motivoConsulta\": \"Revisión de lunar sospechoso\",\n  \"especialidadNombre\": \"Dermatología\", \n  \"especialidadCodigo\": \"DERMA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/solicitar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "solicitar"
+              ]
+            },
+            "description": "Solicita una nueva consulta para el paciente recién creado, especificando una especialidad."
+          },
+          "response": []
+        },
+        {
+          "name": "Agendar Consulta (Éxito)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const moment = require('moment');",
+                  "let proximoLunes = moment().day(1 + 7);",
+                  "if (moment().isoWeekday() >= 1) {",
+                  "  proximoLunes = moment().add(1, 'weeks').day(1);",
+                  "}",
+                  "let inicio = proximoLunes.hour(10).minute(0).second(0).millisecond(0);",
+                  "let fin = inicio.clone().add(30, 'minutes');",
+                  "pm.collectionVariables.set(\"proximo_lunes_10am\", inicio.format(\"YYYY-MM-DDTHH:mm:ss\"));",
+                  "pm.collectionVariables.set(\"proximo_lunes_1030am\", fin.format(\"YYYY-MM-DDTHH:mm:ss\"));",
+                  "console.log(\"Fecha Inicio Agendamiento (Local/Unspecified): \", inicio.format(\"YYYY-MM-DDTHH:mm:ss\"));",
+                  "console.log(\"Fecha Fin Agendamiento (Local/Unspecified): \", fin.format(\"YYYY-MM-DDTHH:mm:ss\"));"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Consulta agendada exitosamente.\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consultaId\": \"{{nueva_consulta_id}}\", \n  \"medicoId\": \"{{medico_derma_id}}\",     \n  \"fechaHoraInicio\": \"{{proximo_lunes_10am}}\", \n  \"fechaHoraFin\": \"{{proximo_lunes_1030am}}\"      \n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/agendar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "agendar"
+              ]
+            },
+            "description": "Agenda la consulta recién solicitada con el médico recién creado en un horario válido (calculado dinámicamente para el próximo Lunes 10:00 AM)."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Consulta por ID (Agendada)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Consulta state is Agendada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.estado).to.eql(1); // 1=Agendada",
+                  "    pm.expect(jsonData.medicoId).to.eql(pm.collectionVariables.get(\"medico_derma_id\"));",
+                  "    pm.expect(jsonData.horario).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}"
+              ]
+            },
+            "description": "Verifica que la consulta recién agendada tenga el estado correcto y los datos del médico y horario."
+          },
+          "response": []
+        },
+        {
+          "name": "Marcar Consulta Realizada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Consulta marcada como realizada exitosamente.\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"consultaId\": \"{{nueva_consulta_id}}\",\n    \"notasMedico\": \"Paciente presenta lunar benigno. Se recomienda observación anual.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}/realizar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}",
+                "realizar"
+              ]
+            },
+            "description": "Marca la consulta agendada como realizada, añadiendo notas del médico."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Consulta por ID (Realizada)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Consulta state is Realizada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.estado).to.eql(3); // 3=Realizada",
+                  "    pm.expect(jsonData.notasMedico).to.not.be.empty;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}"
+              ]
+            },
+            "description": "Verifica que la consulta marcada como realizada tenga el estado y las notas correctas."
+          },
+          "response": []
+        },
+        {
+          "name": "Agregar Prescripción (Éxito)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Prescripción agregada exitosamente.\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"medicamento\": \"Crema Hidratante XYZ\",\n    \"dosis\": \"Aplicar 2 veces al día\",\n    \"instrucciones\": \"Uso tópico en área afectada durante 7 días.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}/prescripciones",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}",
+                "prescripciones"
+              ]
+            },
+            "description": "Agrega una prescripción a la consulta que ya fue marcada como realizada."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Consulta por ID (Con Prescripción)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Consulta contains prescriptions\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.prescripciones).to.be.an('array').that.is.not.empty;",
+                  "    pm.expect(jsonData.prescripciones[0].medicamento).to.eql(\"Crema Hidratante XYZ\");",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}"
+              ]
+            },
+            "description": "Verifica que la consulta contenga la prescripción añadida."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar Consulta (Fallo - Ya Realizada)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 400 Bad Request\", function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "pm.test(\"Response message indicates error\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.contain(\"ya está realizada o cancelada\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"motivo\": \"Intento de cancelación tardía\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}/cancelar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}",
+                "cancelar"
+              ]
+            },
+            "description": "Intenta cancelar una consulta que ya fue marcada como realizada (debería fallar)."
+          },
+          "response": []
+        },
+        {
+          "name": "Solicitar Consulta (Cancelar)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201 Created\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "pm.test(\"Response body contains the new Consulta ID\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData).to.be.a('string');",
+                  "    pm.expect(jsonData).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i);",
+                  "    pm.collectionVariables.set(\"nueva_consulta_cancelar_id\", jsonData);",
+                  "    console.log(\"Nueva Consulta ID guardada: \", jsonData);",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pacienteId\": \"{{nuevo_paciente_id}}\",\n  \"motivoConsulta\": \"Control pediátrico anual\",\n  \"especialidadNombre\": \"Pediatría\",\n  \"especialidadCodigo\": \"PEDIA\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/solicitar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "solicitar"
+              ]
+            },
+            "description": "Solicita una nueva consulta para el paciente recién creado, especificando una especialidad."
+          },
+          "response": []
+        },
+        {
+          "name": "Agendar Consulta (Cancelar)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const moment = require('moment');",
+                  "let proximoMartes = moment().day(2 + 7);",
+                  "if (moment().isoWeekday() >= 2) {",
+                  "  proximoMartes = moment().add(1, 'weeks').day(2);",
+                  "}",
+                  "let inicio = proximoMartes.hour(10).minute(0).second(0).millisecond(0);",
+                  "let fin = inicio.clone().add(30, 'minutes');",
+                  "pm.collectionVariables.set(\"proximo_martes_10am\", inicio.format(\"YYYY-MM-DDTHH:mm:ss\"));",
+                  "pm.collectionVariables.set(\"proximo_martes_1030am\", fin.format(\"YYYY-MM-DDTHH:mm:ss\"));",
+                  "console.log(\"Fecha Inicio Agendamiento (Local/Unspecified): \", inicio.format(\"YYYY-MM-DDTHH:mm:ss\"));",
+                  "console.log(\"Fecha Fin Agendamiento (Local/Unspecified): \", fin.format(\"YYYY-MM-DDTHH:mm:ss\"));"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Consulta agendada exitosamente.\");",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consultaId\": \"{{nueva_consulta_cancelar_id}}\", \n  \"medicoId\": \"{{medico_pedia_id}}\",     \n  \"fechaHoraInicio\": \"{{proximo_martes_10am}}\", \n  \"fechaHoraFin\": \"{{proximo_martes_1030am}}\"      \n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/agendar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "agendar"
+              ]
+            },
+            "description": "Agenda la consulta recién solicitada con el médico recién creado en un horario válido (calculado dinámicamente para el próximo Lunes 10:00 AM)."
+          },
+          "response": []
+        },
+        {
+          "name": "Cancelar Consulta (Éxito)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response message indicates success\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.message).to.eql(\"Consulta cancelada exitosamente.\");",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"motivo\": \"El paciente presentó mejoría y ya no requiere la consulta pediátrica.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_cancelar_id}}/cancelar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_cancelar_id}}",
+                "cancelar"
+              ]
+            },
+            "description": "Cancela una consulta agendada."
+          },
+          "response": []
+        },
+        {
+          "name": "Obtener Consulta por ID (Cancelada)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200 OK\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Consulta state is Realizada\", function () {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.estado).to.eql(3); // 3=Realizada",
+                  "    pm.expect(jsonData.notasMedico).to.not.be.empty;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/consultas/{{nueva_consulta_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "consultas",
+                "{{nueva_consulta_id}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints relacionados con el ciclo de vida y detalles de las Consultas."
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5004",
+      "type": "string"
+    },
+    {
+      "key": "nuevo_paciente_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "medico_derma_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "nueva_consulta_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "proximo_lunes_10am",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "proximo_lunes_1030am",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "nueva_consulta_cancelar_id",
+      "value": ""
+    },
+    {
+      "key": "proximo_martes_10am",
+      "value": ""
+    },
+    {
+      "key": "proximo_martes_1030am",
+      "value": ""
+    },
+    {
+      "key": "medico_pedia_id",
+      "value": ""
+    }
+  ]
+}
